@@ -11,16 +11,15 @@ const partOne = puzzleInput.reduce((acc, curr, index, input) => {
 
 console.log('Part 1 Answer: ', partOne);
 
-function getLastThreeNumberWindow(index: number, input: number[]): number {
+function getThreeNumberWindow(index: number, input: number[]): number {
     const window = input.slice(index - 3, index);
     if (window.length < 3) return 0;
     return window.reduce((acc, curr) => acc + curr, 0);
 }
 
 const partTwo = puzzleInput.reduce((acc, _curr, index, input) => {
-    const isIncrease = getLastThreeNumberWindow(index, input) > getLastThreeNumberWindow(index - 1, input);
-    console.log(isIncrease, getLastThreeNumberWindow(index, input), getLastThreeNumberWindow(index - 1, input));
-    if (index > 20) throw new Error('Index is too big');
+    if (index < 4) return acc;
+    const isIncrease = getThreeNumberWindow(index, input) > getThreeNumberWindow(index - 1, input);
     return isIncrease ? acc + 1 : acc;
 }, 0);
 
