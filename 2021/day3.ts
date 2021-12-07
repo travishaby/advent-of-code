@@ -1,5 +1,6 @@
 import { getInput } from './get_input';
 import * as path from 'path';
+import { log } from 'console';
 
 const fileName = path.parse(__filename).name
 const puzzleInput = getInput(fileName).map(bits => bits.split('').map(bit => parseInt(bit, 10)));
@@ -21,13 +22,13 @@ function countBitExtremity(input: number[][], extreme: 'max' | 'min'): number[] 
 
 const indicesOfMax = countBitExtremity(puzzleInput, 'max')
 const gammaRate = parseInt(indicesOfMax.join(''), 2)
-console.log('Part 1 gammeRate: ', gammaRate);
+console.log('Part 1, gammeRate: ', gammaRate);
 
 const indicesOfMin = countBitExtremity(puzzleInput, 'min')
 const epsilonRate = parseInt(indicesOfMin.join(''), 2)
-console.log('Part 1 episilonRate: ', epsilonRate);
+console.log('Part 1, episilonRate: ', epsilonRate);
 
-console.log('Part 1 Answer: ', gammaRate * epsilonRate);
+console.log('Part 1, Answer: ', gammaRate * epsilonRate);
 
 // Part 2
 
@@ -62,10 +63,29 @@ As there is only one number left, stop; the oxygen generator rating is 10111, or
 
 // if row has a 1 in the first position, put into one list,
 // if row has a 0 in the first position, put into another list
-const buckets: [number[][], number[][]] = [[], []]
-const lineIndex = 0
-const result = exampleInput.reduce((acc, row) => {
-    acc[row[lineIndex]].push(row)
-    return acc
-}, buckets)
-console.log(result);
+
+function groupLines(lines: number[][], lineIndex: number, commonness: 'most' | 'least'): number[] {
+    // break the recursion if we're at the end of the list
+    if (lines.length === 1) return lines[0]
+
+    const buckets: [number[][], number[][]] = [[], []]
+    const [zeros, ones] = lines.reduce((acc, row) => {
+        acc[row[lineIndex]].push(row)
+        return acc
+    }, buckets)
+
+    const comparison = commonness === 'most' ? zeros.length > ones.length : zeros.length <= ones.length
+    const newLines = comparison ? zeros : ones
+
+    return groupLines(newLines, lineIndex + 1, commonness)
+}
+
+const oxygenRatingBits = groupLines(exampleInput, 0, 'most')
+const oxygenRating = parseInt(oxygenRatingBits.join(''), 2)
+console.log('Part 2, Oxygen rating: ', oxygenRating)
+
+const CO2RatingBits = groupLines(exampleInput, 0, 'least')
+const CO2Rating = parseInt(CO2RatingBits.join(''), 2)
+console.log('Part 2, CO2 rating: ', CO2Rating)
+
+console.log('Part 2, Answer: ', oxygenRating * CO2Rating);
