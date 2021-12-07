@@ -32,38 +32,6 @@ console.log('Part 1, Answer: ', gammaRate * epsilonRate);
 
 // Part 2
 
-const exampleInput = [
-    [0,0,1,0,0],
-    [1,1,1,1,0],
-    [1,0,1,1,0],
-    [1,0,1,1,1],
-    [1,0,1,0,1],
-    [0,1,1,1,1],
-    [0,0,1,1,1],
-    [1,1,1,0,0],
-    [1,0,0,0,0],
-    [1,1,0,0,1],
-    [0,0,0,1,0],
-    [0,1,0,1,0]
-]
-
-/* 
-For example, to determine the oxygen generator rating value using the same example diagnostic report from above:
-
-Start with all 12 numbers and consider only the first bit of each number. There are more 1 bits (7) 
-    than 0 bits (5), so keep only the 7 numbers with a 1 in the first position: 11110, 10110, 10111, 10101, 11100, 10000, and 11001.
-Then, consider the second bit of the 7 remaining numbers: there are more 0 bits (4) than 1 bits (3), 
-    so keep only the 4 numbers with a 0 in the second position: 10110, 10111, 10101, and 10000.
-In the third position, three of the four numbers have a 1, so keep those three: 10110, 10111, and 10101.
-In the fourth position, two of the three numbers have a 1, so keep those two: 10110 and 10111.
-In the fifth position, there are an equal number of 0 bits and 1 bits (one each). So, to find the 
-    oxygen generator rating, keep the number with a 1 in that position: 10111.
-As there is only one number left, stop; the oxygen generator rating is 10111, or 23 in decimal.
-*/
-
-// if row has a 1 in the first position, put into one list,
-// if row has a 0 in the first position, put into another list
-
 function groupLines(lines: number[][], lineIndex: number, commonness: 'most' | 'least'): number[] {
     // break the recursion if we're at the end of the list
     if (lines.length === 1) return lines[0]
@@ -80,11 +48,11 @@ function groupLines(lines: number[][], lineIndex: number, commonness: 'most' | '
     return groupLines(newLines, lineIndex + 1, commonness)
 }
 
-const oxygenRatingBits = groupLines(exampleInput, 0, 'most')
+const oxygenRatingBits = groupLines(puzzleInput, 0, 'most')
 const oxygenRating = parseInt(oxygenRatingBits.join(''), 2)
 console.log('Part 2, Oxygen rating: ', oxygenRating)
 
-const CO2RatingBits = groupLines(exampleInput, 0, 'least')
+const CO2RatingBits = groupLines(puzzleInput, 0, 'least')
 const CO2Rating = parseInt(CO2RatingBits.join(''), 2)
 console.log('Part 2, CO2 rating: ', CO2Rating)
 
