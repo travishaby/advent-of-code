@@ -29,7 +29,9 @@ const boards: Board[] = puzzleInput
 // Part 1
 function markNumber(number: number, board: Board) {
     const row = board.findIndex(row => row.find(entry => entry[0] === number))
+    if (row === -1) return
     const col = board[row].findIndex(entry => entry[0] === number)
+    if (col === -1) return
     board[row][col][1] = true
 }
 
