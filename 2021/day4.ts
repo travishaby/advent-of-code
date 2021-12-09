@@ -8,7 +8,8 @@ const numbers: number[] = puzzleInput[0].split(',').map(Number)
 
 type Board = [number, boolean][][]
 
-const boards: Board[] = puzzleInput
+let boards: Board[] = 
+    puzzleInput
     .slice(1)
     .reduce((acc, curr) => {
         if (curr === '') {
@@ -57,8 +58,6 @@ for (const number of numbers) {
     }
     winner = boards.find(board => {
         if (hasWinningColumn(board) || hasWinningRow(board)) {
-            console.log('We have a winner!');
-            console.log(board);
             return true
         }
     })
@@ -81,7 +80,43 @@ function sumUnmarkedNumbers(board: Board) {
 
 const sum = sumUnmarkedNumbers(winner!)
 
-
 console.log('Part 1, sum: ', sum);
 console.log('Part 1, winning number: ', winningNumber!);
 console.log('Part 1, Answer: ', sum * winningNumber!);
+
+
+// Part 2
+
+let lastBoard: Board
+let lastWinningNumber: number
+
+for (const number of numbers) {
+    for (const board of boards) {
+        markNumber(number, board)
+    }
+    // need to mark any boards as winners, and collect their index in the boards
+    // collection for removal before the next iteration
+    const winnersIndices = boards.reduce((acc, board, index) => {
+        if (hasWinningColumn(board) || hasWinningRow(board)) {
+            acc.push(index)
+        }
+        return acc
+    }, [] as number[])
+
+    // remove the winning board(s) from the list of boards if any exist
+    if (winnersIndices.length) {
+        // assuming there's only one winner on the last pass, stop looping
+        if (boards.length <= 1) {
+            lastWinningNumber = number
+            lastBoard = boards[0]
+            break
+        }
+        boards = boards.filter((_, index) => !winnersIndices.includes(index))
+    }
+}
+
+const lastBoardSum = sumUnmarkedNumbers(lastBoard!)
+
+console.log('Part 2, sum: ', lastBoardSum);
+console.log('Part 2, winning number: ', lastWinningNumber!);
+console.log('Part 2, Answer: ', lastBoardSum * lastWinningNumber!);
