@@ -1,8 +1,6 @@
 import { getInput } from './get_input';
-import * as path from 'path';
 
-const fileName = path.parse(__filename).name
-const puzzleInput = getInput(fileName).map(bits => bits.split('').map(bit => parseInt(bit, 10)));
+const puzzleInput = getInput(__filename).map(bits => bits.split('').map(bit => parseInt(bit, 10)));
 
 // Part 1
 

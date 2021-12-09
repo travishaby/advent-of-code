@@ -1,8 +1,6 @@
 import { getInput } from './get_input';
-import * as path from 'path';
 
-const fileName = path.parse(__filename).name
-const puzzleInput = getInput(fileName).map(string => parseInt(string, 10));
+const puzzleInput = getInput(__filename).map(string => parseInt(string, 10));
 
 const partOne = puzzleInput.reduce((acc, curr, index, input) => {
     const isIncrease = curr > input[index - 1];

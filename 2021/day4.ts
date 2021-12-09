@@ -1,8 +1,6 @@
 import { getInput } from './get_input';
-import * as path from 'path';
 
-const fileName = path.parse(__filename).name
-const puzzleInput = getInput(fileName)
+const puzzleInput = getInput(__filename)
 
 const numbers: number[] = puzzleInput[0].split(',').map(Number)
 

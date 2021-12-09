@@ -1,8 +1,6 @@
 import { getInput } from './get_input';
-import * as path from 'path';
 
-const fileName = path.parse(__filename).name
-const puzzleInput = getInput(fileName).map(command => {
+const puzzleInput = getInput(__filename).map(command => {
     const [direction, scalar] = command.split(' ')
     return { direction, scalar: parseInt(scalar) }
 });
