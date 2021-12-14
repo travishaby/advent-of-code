@@ -4,35 +4,56 @@ const puzzleInput = getInput(__filename)
 
 const initialState = puzzleInput[0].split(',').map(Number)
 
+function buildFishMap(fish: number[]) {
+    return fish.reduce((acc, curr) => {
+        acc[curr] = (acc[curr] || 0) + 1
+        return acc
+    }, {} as State)
+}
+
 // part 1
 
 // Each day, a 0 becomes a 6 and adds a new 8 to the end of the list,
 // while each other number decreases by 1 if it was present at the start of the day.
-function tickDay(fish: number[]) {
-    const newFish: number[] = []
-    const tickedFish = fish.reduce((acc, curr) => {
-        if (curr === 0) {
-            acc.push(6)
-            newFish.push(8)
+type State = {
+    [timer: string]: number
+}
+
+// loop over the fish map, move the count of the fish from the previous
+// timer to the next one, and add new fish with a timer of 8 for the count
+// of fish that had a timer of 0, and the count of those fish to the count
+// for the 6 timer
+function tickDay(fishMap: State) {
+    const newFishMap: State = {}
+    Object.keys(fishMap).forEach(timer => {
+        const count = fishMap[timer]
+        if (timer === '0') {
+            newFishMap[6] = (newFishMap[6] || 0) + count
+            newFishMap[8] = count
+            newFishMap[0] = 0
         } else {
-            acc.push(curr - 1)
+            newFishMap[Number(timer) - 1] = (newFishMap[Number(timer) - 1] || 0) + count
         }
-        return acc
-    }, [] as number[])
-    return [...tickedFish, ...newFish]
+    })
+    return newFishMap
 }
 
-const result = tickDay(initialState)
+let part1 = buildFishMap(initialState)
 
-let current = [...initialState];
 for (let i = 0; i < 80; i++) {
-    current = tickDay(current)
+    part1 = tickDay(part1)
 }
-console.log('Part 1: ', current.length);
+
+const fishCountPart1 = Object.values(part1).reduce((acc, curr) => acc + curr, 0) 
+console.log('Part 2: ', fishCountPart1);
 
 // part 2
-let part2 = [...initialState];
+
+let part2 = buildFishMap(initialState)
+
 for (let i = 0; i < 256; i++) {
     part2 = tickDay(part2)
 }
-console.log('Part 2: ', part2.length);
+
+const fishCountPart2 = Object.values(part2).reduce((acc, curr) => acc + curr, 0) 
+console.log('Part 2: ', fishCountPart2);
