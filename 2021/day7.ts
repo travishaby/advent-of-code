@@ -21,4 +21,28 @@ for (let i = minNum; i <= maxNum; i++) {
 }
 
 const minCost = costs.reduce((acc, cur) => (acc[0] < cur[0]) ? acc : cur)
-console.log(minCost)
+console.log('Part 1: ', minCost)
+
+// Part 2
+
+function getDynamicCost(difference: number) {
+    let nonLinearCost = 0
+    for (let j = 1; j <= difference; j++) {
+        nonLinearCost += j
+    }
+    return nonLinearCost
+}
+
+// costs: [cost, horizontalPostition][]
+let part2costs: [number, number][] = []
+for (let i = minNum; i <= maxNum; i++) {
+    // cost of movement is not linear, need to sum all the digits between the numbers
+    const cost = positions.reduce((acc, curr) => {
+        const difference = Math.abs(curr - i)
+        return acc + getDynamicCost(difference)
+    }, 0)
+    part2costs.push([cost, i])
+}
+
+const part2minCost = part2costs.reduce((acc, cur) => (acc[0] < cur[0]) ? acc : cur)
+console.log('Part 2: ', part2minCost)
